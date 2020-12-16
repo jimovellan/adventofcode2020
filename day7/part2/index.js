@@ -2,11 +2,11 @@ const comun = require('../../comun/index');
 
 (async ()=>{
 
-    var file = await comun.readFile('data',"\n");
+    var file = await comun.readFile('data2',"\n");
 
     var objs = await ObteinObject(file);
 
-    var number = await calculate(objs,['shiny gold'],[]);
+    var number = await calculate(objs,['shiny gold'],[],1);
 
     
 
@@ -14,50 +14,58 @@ const comun = require('../../comun/index');
 
 })();
 
-async function calculate(objs, finded,getted){
+async function calculate(objs, finded,getted,number){
     
     var total = 0;
 
     var elements = objs.filter((value,idx,arr)=>{
-           var result =  value.container.find((v)=>{
-                for(var i=0; i< finded.length; i++){
-                    
-                    if(v.bag == finded[i]){
-                        return true;
-                    }
-                }
-                return false;
-            });
-
-            return result != undefined;
+           return value.bag == finded[0];
     });
     
-    var total =  0;
+    console.log(elements[0]);
+
+    var total = 0;
     //console.log(`${finded} : ${total}`);
-    if(elements != undefined && elements.length > 0){
+    if(elements != undefined && elements.length > 0 && elements[0].container.length > 0){
+        
             var els = [];
 
-            for(var i=0; i<elements.length; i++){
-                if(els.indexOf(elements[i].bag)<0){
+            for(var i=0; i<elements[0].container.length; i++){
+                els.push(elements[0].container[i].bag);
+
+                // if(els.indexOf(elements[i].bag)<0){
+                   
+                //     // if(getted.indexOf(elements[i].bag)<0){
+                //     //     total +=1;
+                //     //     els.push(elements[i].bag);
+                //     //     getted.push(elements[i].bag);
+                //     // }
                     
-                    if(getted.indexOf(elements[i].bag)<0){
-                        total +=1;
-                        els.push(elements[i].bag);
-                        getted.push(elements[i].bag);
-                    }
+                // }
+                
+
+               
+
+                if(!isNaN(elements[0].container[i].qty)){
+
                     
+                    
+                    var qty = await calculate(objs,[elements[0].container[i].bag],getted);    
+
+                    var qtyelement =  elements[0].container[i].qty;
+
+                    total = total + (qty * qtyelement);
+
+                    
+
                 }
                 
             }
-            var qty = await calculate(objs,els,getted);
-            total = total + qty;
+            
            
         }
 
-       
-    
-
-    return total;
+    return total + 1;
 
 }
 
