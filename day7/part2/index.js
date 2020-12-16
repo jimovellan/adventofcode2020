@@ -2,11 +2,11 @@ const comun = require('../../comun/index');
 
 (async ()=>{
 
-    var file = await comun.readFile('data2',"\n");
+    var file = await comun.readFile('data',"\n");
 
     var objs = await ObteinObject(file);
 
-    var number = await calculate(objs,['shiny gold'],[],1);
+    var number = await calculate(objs,['shiny gold'],[],0);
 
     
 
@@ -25,7 +25,7 @@ async function calculate(objs, finded,getted,number){
     console.log(elements[0]);
 
     var total = 0;
-    //console.log(`${finded} : ${total}`);
+  
     if(elements != undefined && elements.length > 0 && elements[0].container.length > 0){
         
             var els = [];
@@ -33,15 +33,7 @@ async function calculate(objs, finded,getted,number){
             for(var i=0; i<elements[0].container.length; i++){
                 els.push(elements[0].container[i].bag);
 
-                // if(els.indexOf(elements[i].bag)<0){
-                   
-                //     // if(getted.indexOf(elements[i].bag)<0){
-                //     //     total +=1;
-                //     //     els.push(elements[i].bag);
-                //     //     getted.push(elements[i].bag);
-                //     // }
-                    
-                // }
+                
                 
 
                
@@ -49,13 +41,14 @@ async function calculate(objs, finded,getted,number){
                 if(!isNaN(elements[0].container[i].qty)){
 
                     
+                    var qtyelement =  parseInt(elements[0].container[i].qty);
+                    var qty = await calculate(objs,[elements[0].container[i].bag],getted,qtyelement);    
+
                     
-                    var qty = await calculate(objs,[elements[0].container[i].bag],getted);    
 
-                    var qtyelement =  elements[0].container[i].qty;
-
-                    total = total + (qty * qtyelement);
-
+                    total = total + qty;
+                    
+                    console.log(total);
                     
 
                 }
@@ -64,8 +57,10 @@ async function calculate(objs, finded,getted,number){
             
            
         }
-
-    return total + 1;
+        if(number==0){
+            return (total);
+        }
+    return (total*number) + number;
 
 }
 
